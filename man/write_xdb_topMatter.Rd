@@ -17,6 +17,7 @@ about the experiments and rotational components.
 \examples{
 # desired file path and file name for the output to be created
 fileOut <- 'C:/Users/deinesji/1PhdJill/test.xdb.xml'
+
 # create output
 write_xdb_topMatter(fileOut)
 }

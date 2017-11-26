@@ -4,7 +4,7 @@
 \alias{write_xdb_experiment}
 \title{Write SALUS xdb.xml Experiment Level Parameters}
 \usage{
-write_xdb_experiment(outFile, ExpID, RunTitle, startYear, endYear, startDOY,
+write_xdb_experiment(outFile, ExpID, RunTitle, startYear, NYrs, startDOY,
   StationID, Weatherfp, SoilID, Soilfp, Cropfp)
 }
 \arguments{
@@ -16,7 +16,7 @@ write_xdb_experiment(outFile, ExpID, RunTitle, startYear, endYear, startDOY,
 
 \item{startYear}{Starting year of the simulation - SYear parameter}
 
-\item{endYear}{Ending year of the simulation. Used to derive NYrs parameter (number of years)}
+\item{NYrs}{Number of model years}
 
 \item{startDOY}{Starting day of year, fills in SDOY parameter}
 
@@ -36,12 +36,16 @@ about the rotational components. See http://salusmodel.glg.msu.edu/salus.ddb.xml
 information about SALUS parameter options. This function should be followed with write_xdb_rotation,
 write_xdb_m* (rotation management), and write_xdb_bottomMatter functions to complete the Experiment file.
 }
+\details{
+All other SALUS Experiment parameters are set currently as default.
+}
 \examples{
 # file path to existing .xdb.xml file created by write_xdb_topMatter
 fileOut <- 'C:/Users/deinesji/1PhdJill/test.xdb.xml'
+
 # append Experiment parameters to .xdb.xml; numeric parameters can be character or numeric
 write_xdb_experiment(fileOut, ExpID = 1, RunTitle = 'Test', startYear = 2006,
-                     endYear = 2016, startDOY = 270, StationID = 1001,
+                     NYrs = 3, startDOY = 270, StationID = 1001,
                      Weatherfp = '1001.wdb.xml', SoilID = 'KS1017570',
                      Soilfp = 'KS.sdb.xml', Cropfp = 'cropsn29Dec2016.cdb.xml')
 }

@@ -61,7 +61,7 @@ write_xdb_experiment <- function(outFile, ExpID, RunTitle, startYear, NYrs, star
              Soilfp, '" SoilID="', SoilID, '" Weatherfp="', Weatherfp,
              '" StationID="', StationID, '" Cropfp="', Cropfp,
              # some defaults
-             '" NRrepSq="0" MeEvp="R" MeInf="R" kResOrg="3.914E-5" kSloOrg="0.00013699" >\n'),
+             '" NRrepSq="0" MeEvp="R" MeInf="R" kResOrg="3.914E-5" kSloOrg="0.00013699">\n'),
       file=outFile, append=TRUE)
 }
 

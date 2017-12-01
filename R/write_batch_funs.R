@@ -13,6 +13,7 @@
 #'
 #' @param shDir Directory in which to save the output shell sh file. the sh filename is pulled from xdb filename
 #' @param hpcHomeDir Directory on HPCC in which source files reside for this run (sdb, xdb, zipped weather, etc). Should end in a forward slash
+#' @param hpcOutDir Directory on HPCC to write results to, Should end in a forward slash
 #' @param xdb filename of the experiment file, without extension. sh name will be pulled from this.
 #' @param sdb filename of the soil file (no path, no .sdb.xml extension)
 #' @param wdbZip filename of the zipped weather file. Script will unzip on the node
@@ -24,19 +25,22 @@
 #' @keywords HPCC preparation shell sh
 #' @export
 #' @examples
+#' #set variables
+#' shDir <- 'C:/Users/deinesji/Dropbox/1PhdJill/hpa/LEMAs/SALUS/testHPCCrun'
+#' hpcHomeDir <- '/mnt/home/deinesji/Example_SALUS_wheat/'
+#' hpcOutDir <- '/mnt/home/deinesji/Example_SALUS_wheat/results/'
+#' xdb <- 'lema_wheat_continuous'
+#' sdb <- "KS"
+#' wdbZip <- 'testHPCCrun.tar.gz'
+#' DayVars <- 'ExpID,Title,SpeciesID,GWAD,IRRC,CWAD,DRNC,PREC,LAI'
+#' SeaVars <- 'ExpID,Title,SpeciesID,GWAD,IRRC,CWAD,DRNC,PREC'
+#' walltime <- '01:00:00'
+#' memory <- '2000mb'
 #'
-shDir <- 'C:/Users/deinesji/Dropbox/1PhdJill/hpa/LEMAs/SALUS/testHPCCrun'
-hpcHomeDir <- '/mnt/home/deinesji/Example_SALUS_wheat/'
-xdb <- 'lema_wheat_continuous'
-sdb <- "KS"
-wdbZip <- 'testHPCCrun.tar.gz'
-DayVars <- 'ExpID,Title,SpeciesID,GWAD,IRRC,CWAD,DRNC,PREC,LAI'
-SeaVars <- 'ExpID,Title,SpeciesID,GWAD,IRRC,CWAD,DRNC,PREC'
-walltime <- '01:00:00'
-memory <- '2000mb'
-cdb = 'cropsn29Dec2016.cdb.xml'
+#' write_HPC_shell(shDir, hpcHomeDir, hpcOutDir, xdb, sdb, wdbZip, DayVars,
+#'                 SeaVars, walltime, memory)
 
-write_HPCC_shell <- function(shDir, hpcHomeDir, xdb,sdb,wdbZip,DayVars,SeaVars,
+write_HPC_shell <- function(shDir, hpcHomeDir, hpcOutDir, xdb,sdb,wdbZip,DayVars,SeaVars,
                              walltime, memory, cdb = 'cropsn29Dec2016.cdb.xml'){
   outFile <- paste0(shDir,'/',xdb,'.sh')
   # PBS stuff
@@ -59,7 +63,24 @@ write_HPCC_shell <- function(shDir, hpcHomeDir, xdb,sdb,wdbZip,DayVars,SeaVars,
              'cp -r -L ', hpcHomeDir, sdb, '.sdb.xml .\n',
              'cp -r -L ', hpcHomeDir, wdbZip, ' .\n',
              'tar -xzf ', wdbZip,'\n',
-             'cp -r -L ', hpcHomeDir, xdb, '.xdb.xml .\n\n'
+             'cp -r -L ', hpcHomeDir, xdb, '.xdb.xml .\n\n',
+             '# Run SALUS\n',
+             './salus_gnu -wn xdb="', xdb, '.xdb.xml" file1="', xdb, '_daily.csv" ',
+             'freq1="1" vars1="', DayVars, '" file2="', xdb, '_seasonal.csv" ',
+             'freq2="season" vars2="', SeaVars, '" msglevel="status" > "',
+             xdb, '_salus.log"\n\n',
+             '# Remove the config files from the node (everything except the results). This may not be necessary since the TMPDIR is deleted after the job.\n',
+             'rm salus_gnu\n',
+             'rm salus.gdb.xml\n',
+             'rm cropsn29Dec2016.cdb.xml\n',
+             'rm ', sdb, '.sdb.xml\n',
+             'rm *.wdb.xml\n',
+             'rm ', wdbZip, '\n',
+             'rm ', xdb, '.xdb.xml\n\n',
+             '# Move the result files to the output directory.\n',
+             'mv ', xdb, '_daily.csv ', hpcOutDir, '\n',
+             'mv ', xdb, '_seasonal.csv ', hpcOutDir, '\n',
+             'mv ', xdb, '_salus.log ', hpcOutDir, '\n'
              ),
       file = outFile)
 }
@@ -81,9 +102,9 @@ write_HPCC_shell <- function(shDir, hpcHomeDir, xdb,sdb,wdbZip,DayVars,SeaVars,
 #' fileOut <- 'C:/Users/deinesji/Dropbox/1PhdJill/hpa/LEMAs/SALUS/testHPCCrun/test.bat'
 #'
 #' # write out .bat file
-#' write_HPCC_bat(shNames, fileOut)
+#' write_HPC_bat(shNames, fileOut)
 
-write_HPCC_bat <- function(sh_vector, outFile){
+write_HPC_bat <- function(sh_vector, outFile){
   # write one qsub command per line
   cat(paste('qsub ', sh_vector, '\n', sep='', collapse=''),
       file = outFile)

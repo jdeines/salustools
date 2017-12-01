@@ -42,7 +42,9 @@
 
 write_HPC_shell <- function(shDir, hpcHomeDir, hpcOutDir, xdb,sdb,wdbZip,DayVars,SeaVars,
                              walltime, memory, cdb = 'cropsn29Dec2016.cdb.xml'){
-  outFile <- paste0(shDir,'/',xdb,'.sh')
+  # set output file to binary encoding (no windows end of lines)
+  outFile <- file(paste0(shDir,'/',xdb,'.sh'), 'wb')
+
   # PBS stuff
   cat(paste0('#!/bin/sh -login\n',
              '#PBS -l nodes=1:ppn=1,walltime=', walltime, ',mem=', memory, '\n',
@@ -83,6 +85,8 @@ write_HPC_shell <- function(shDir, hpcHomeDir, hpcOutDir, xdb,sdb,wdbZip,DayVars
              'mv ', xdb, '_salus.log ', hpcOutDir, '\n'
              ),
       file = outFile)
+
+  close(outFile)
 }
 
 
@@ -105,9 +109,13 @@ write_HPC_shell <- function(shDir, hpcHomeDir, hpcOutDir, xdb,sdb,wdbZip,DayVars
 #' write_HPC_bat(shNames, fileOut)
 
 write_HPC_bat <- function(sh_vector, outFile){
+  fileCon <- file(outFile, 'wb')
+
   # write one qsub command per line
   cat(paste('qsub ', sh_vector, '\n', sep='', collapse=''),
-      file = outFile)
+      file = fileCon)
+
+  close(fileCon)
 }
 
 

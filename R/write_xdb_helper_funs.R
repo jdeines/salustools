@@ -47,3 +47,65 @@ makeExperimentTable <- function(runTitle, ExpID, mukey, wthID, startyear, Nyears
                        cropfp = cropfp)
   return(exptab)
 }
+
+
+#' Parse Crop Rotations from Experiment String Code
+#'
+#' This function extracts rotation and management level parameters for
+#' one experiment. Outputs a data frame containing year, crop,
+#' and irrigation status, along with nldas and soil codes.
+#'
+#' For any grid cells that include 'grassland' in the middle of a crop sequence,
+#' this is assumed to be misclassified by the CDL and is changed to 'fallow'
+#'
+#' @param ExpCode One text string denoting sequence of annual climate-soil-crop-irrigation rotations, separated by '_'
+#' @param startyear year to start experiment
+#' @param cropkey Look up table for CDL crop codes. column names should be 'cropCode' and 'crop'
+#' @keywords preparation to write rotation parameters
+#' @export
+#' @examples
+#' # make inputs
+#' expCode <- '20266874911230010_20266874911230010_20266874911230010_20266874911231760_20266874911230010_20266874911230610_20266874911230010_20266874911230040_20266874911230240_20266874911230240_20266874911230611'
+#' sYear <- 2006
+#' cropkey <- data.frame(cropCode = c('001','004','005','024','061','176'),
+#'                       crop = c('CORN','SORGHUM','SOYBEANS','WHEAT',
+#'                                    'FALLOW','GRASS'))
+#'
+#' rotations <- parseRotationStrings(expCode, sYear, cropkey)
+
+parseRotationStrings <- function(ExpCode, startyear, cropkey){
+  # split experiment string by year
+  yearCode <- strsplit(ExpCode, '_')
+
+  # parse year codes into a df of year, crop, management, nldas, soil
+
+  # extract vars
+  soil <- substr(x[[1]], start = 1, stop = 9)
+  nldas <- substr(x[[1]], start = 10, stop = 13)
+  crop <- substr(x[[1]], start = 14, stop = 16)
+  irr <- substr(x[[1]], start = 17, stop = 17)
+
+  # format into a table
+  endyear <- startyear + length(soil) - 1
+  outdf <- data.frame(year = startyear:endyear,
+                      cropCode = crop,
+                      irrStatus = irr,
+                      nldas = nldas,
+                      soilkey = soil)
+  # add crop name
+  outdf2 <- merge(outdf, cropkey, by = 'cropCode')
+  # format
+  outdf3 <- outdf2[order(outdf2$year),]
+  rownames(outdf3) <- 1:nrow(outdf3)
+  outdf4 <- outdf3[,c('year','crop','irrStatus','nldas','soilkey')]
+
+  # change grassland to fallow if it's embedded in a crop rotation sequence
+  if(sum(outdf4$crop == 'GRASS') < length(soil)/3){
+    outdf4[outdf4$crop == 'GRASS','crop'] <- 'FALLOW'
+  }
+
+  return(outdf4)
+
+}
+
+

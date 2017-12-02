@@ -12,11 +12,12 @@
 #' @param ExpID Sequential ID for experiment
 #' @param mukey soil mukey from SSURGO
 #' @param wthID weather station ID
+#' @param ExpCode text string denoting sequence of annual climate-soil-crop-irrigation rotations, separated by '_'
 #' @param startyear year to start experiment
 #' @param Nyears Number of years in experiment
 #' @param startDOY Starting day of year, fills in SDOY parameter
 #' @param state state, 2-letter abbreviation. defaults to 'KS'
-#' @param Cropfp Filepath to crop .cdb.xml database file. Defaults to 'cropsn29Dec2016.cdb.xml'
+#' @param cropfp Filepath to crop .cdb.xml database file. Defaults to 'cropsn29Dec2016.cdb.xml'
 #' @keywords preparation to write experiment parameters
 #' @export
 #' @examples
@@ -30,10 +31,11 @@
 #'
 #' # translate mukey, expid, and nldas info into data.frame of Experiment parameters
 #' exp_master <- makeExperimentTable('run title', lemaExps$ExpID, lemaExps$mukey,
-#'                                   lemaExps$nldas, 2005, 11, 265)
+#'                                   lemaExps$nldas, lemaExps$ExpCode, 2005, 11, 265)
 
 
-makeExperimentTable <- function(runTitle, ExpID, mukey, wthID, startyear, Nyears, startDOY,
+makeExperimentTable <- function(runTitle, ExpID, mukey, wthID, ExpCode,
+                                startyear, Nyears, startDOY,
                                 state = 'KS', cropfp = 'cropsn29Dec2016.cdb.xml'){
   exptab <- data.frame(ExpID = ExpID,
                        runTitle = runTitle,
@@ -44,7 +46,8 @@ makeExperimentTable <- function(runTitle, ExpID, mukey, wthID, startyear, Nyears
                        startYear = startyear,
                        Nyrs = Nyears,
                        startDOY = startDOY,
-                       cropfp = cropfp)
+                       cropfp = cropfp,
+                       ExpCode = ExpCode)
   return(exptab)
 }
 
@@ -80,10 +83,10 @@ parseRotationStrings <- function(ExpCode, startyear, cropkey){
   # parse year codes into a df of year, crop, management, nldas, soil
 
   # extract vars
-  soil <- substr(x[[1]], start = 1, stop = 9)
-  nldas <- substr(x[[1]], start = 10, stop = 13)
-  crop <- substr(x[[1]], start = 14, stop = 16)
-  irr <- substr(x[[1]], start = 17, stop = 17)
+  soil <- substr(yearCode[[1]], start = 1, stop = 9)
+  nldas <- substr(yearCode[[1]], start = 10, stop = 13)
+  crop <- substr(yearCode[[1]], start = 14, stop = 16)
+  irr <- substr(yearCode[[1]], start = 17, stop = 17)
 
   # format into a table
   endyear <- startyear + length(soil) - 1

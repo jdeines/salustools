@@ -4,8 +4,8 @@
 \alias{makeExperimentTable}
 \title{Make Experiment Master Table}
 \usage{
-makeExperimentTable(runTitle, ExpID, mukey, wthID, startyear, Nyears, startDOY,
-  state = "KS", cropfp = "cropsn29Dec2016.cdb.xml")
+makeExperimentTable(runTitle, ExpID, mukey, wthID, ExpCode, startyear, Nyears,
+  startDOY, state = "KS", cropfp = "cropsn29Dec2016.cdb.xml")
 }
 \arguments{
 \item{runTitle}{Name of overall run scenario}
@@ -16,6 +16,8 @@ makeExperimentTable(runTitle, ExpID, mukey, wthID, startyear, Nyears, startDOY,
 
 \item{wthID}{weather station ID}
 
+\item{ExpCode}{text string denoting sequence of annual climate-soil-crop-irrigation rotations, separated by '_'}
+
 \item{startyear}{year to start experiment}
 
 \item{Nyears}{Number of years in experiment}
@@ -24,7 +26,7 @@ makeExperimentTable(runTitle, ExpID, mukey, wthID, startyear, Nyears, startDOY,
 
 \item{state}{state, 2-letter abbreviation. defaults to 'KS'}
 
-\item{Cropfp}{Filepath to crop .cdb.xml database file. Defaults to 'cropsn29Dec2016.cdb.xml'}
+\item{cropfp}{Filepath to crop .cdb.xml database file. Defaults to 'cropsn29Dec2016.cdb.xml'}
 }
 \description{
 This function extracts Experiment level parameters from experiment combination
@@ -48,7 +50,7 @@ lemaExps <- lemaExps \%>\%
 
 # translate mukey, expid, and nldas info into data.frame of Experiment parameters
 exp_master <- makeExperimentTable('run title', lemaExps$ExpID, lemaExps$mukey,
-                                  lemaExps$nldas, 2005, 11, 265)
+                                  lemaExps$nldas, lemaExps$ExpCode, 2005, 11, 265)
 }
 \keyword{experiment}
 \keyword{parameters}

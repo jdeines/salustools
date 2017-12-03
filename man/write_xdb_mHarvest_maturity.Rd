@@ -10,9 +10,9 @@ write_xdb_mHarvest_maturity(outFile, HKnDnPc = 100, HBPc = 0, HPc = 100,
 \arguments{
 \item{outFile}{Full file path for an existing .xdb.xml to appended to, created with write_xdb_topMatter}
 
-\item{HKnDnPc}{Harvest knock-down percent (%) between 0 and 100. Defaults to 100. Percent of stalk/leaves knocked down at harvest.}
+\item{HKnDnPc}{Harvest knock-down percent between 0 and 100. Defaults to 100. Percent of stalk/leaves knocked down at harvest.}
 
-\item{HBPc}{Percent of byproduct harvested (%) between 0 and 100. Defaults to 0. basically how much of the leaves/stem to you want to remove from the field}
+\item{HBPc}{Percent of byproduct harvested between 0 and 100. Defaults to 0. basically how much of the leaves/stem to you want to remove from the field}
 
 \item{HPc}{Harvest percentage between 0 and 100. Defaults to 100.}
 

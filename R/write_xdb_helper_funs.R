@@ -58,9 +58,6 @@ makeExperimentTable <- function(runTitle, ExpID, mukey, wthID, ExpCode,
 #' one experiment. Outputs a data frame containing year, crop,
 #' and irrigation status, along with nldas and soil codes.
 #'
-#' For any grid cells that include 'grassland' in the middle of a crop sequence,
-#' this is assumed to be misclassified by the CDL and is changed to 'fallow'
-#'
 #' @param ExpCode One text string denoting sequence of annual climate-soil-crop-irrigation rotations, separated by '_'
 #' @param startyear year to start experiment
 #' @param cropkey Look up table for CDL crop codes. column names should be 'cropCode' and 'crop'
@@ -102,10 +99,13 @@ parseRotationStrings <- function(ExpCode, startyear, cropkey){
   rownames(outdf3) <- 1:nrow(outdf3)
   outdf4 <- outdf3[,c('year','crop','irrStatus','nldas','soilkey')]
 
-  # change grassland to fallow if it's embedded in a crop rotation sequence
-  if(sum(outdf4$crop == 'GRASS') < length(soil)/3){
-    outdf4[outdf4$crop == 'GRASS','crop'] <- 'FALLOW'
-  }
+  # # change grassland to fallow if it's embedded in a crop rotation sequence
+  # if(sum(outdf4$crop == 'GRASS') < length(soil)/3){
+  #   outdf4[outdf4$crop == 'GRASS','crop'] <- 'FALLOW'
+  # }
+
+  # convert crop to character
+  outdf4$crop <- as.character(outdf4$crop)
 
   return(outdf4)
 

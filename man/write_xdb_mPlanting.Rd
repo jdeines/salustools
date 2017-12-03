@@ -10,17 +10,17 @@ write_xdb_mPlanting(outFile, CropMod, SpeciesID, cultivar, Year, DOY, Ppop,
 \arguments{
 \item{outFile}{Full file path for an existing .xdb.xml to appended to, created with write_xdb_topMatter}
 
-\item{CropMod}{Crop model to be used. C = complex, S = simple. Intermediate (I) still under development}
+\item{CropMod}{Crop model to be used. C = complex, S = simple. Intermediate I still under development}
 
 \item{SpeciesID}{Species ID}
 
-\item{Year}{Year of planting - if needed (planting on Reported date); XXXX}
+\item{Year}{Year of planting - if needed -planting on Reported date; XXXX}
 
 \item{DOY}{day of year of planting; only needed if planting management is 'R' or 'Y'. Valid range: 1-366}
 
-\item{Ppop}{Plant population at seeding (plants m^-2)}
+\item{Ppop}{Plant population at seeding; plants m^-2}
 
-\item{RowSpc}{Row spacing (cm)}
+\item{RowSpc}{Row spacing, cm}
 
 \item{closeComponent}{'Y' or 'N' . Should the rotation component be closed? defaults to 'N'}
 

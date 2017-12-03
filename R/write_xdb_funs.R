@@ -115,13 +115,13 @@ write_xdb_rotation <- function(outFile, OrderNum, Title, IIrrI, IferI, ITilI,
 #'
 #' All other SALUS planting parameters are set currently as default.
 #' @param outFile Full file path for an existing .xdb.xml to appended to, created with write_xdb_topMatter
-#' @param CropMod Crop model to be used. C = complex, S = simple. Intermediate (I) still under development
+#' @param CropMod Crop model to be used. C = complex, S = simple. Intermediate I still under development
 #' @param SpeciesID Species ID
 #' @param CultivarID cultivar ID, only needed for complex crop model
-#' @param Year Year of planting - if needed (planting on Reported date); XXXX
+#' @param Year Year of planting - if needed -planting on Reported date; XXXX
 #' @param DOY day of year of planting; only needed if planting management is 'R' or 'Y'. Valid range: 1-366
-#' @param Ppop Plant population at seeding (plants m^-2)
-#' @param RowSpc Row spacing (cm)
+#' @param Ppop Plant population at seeding; plants m^-2
+#' @param RowSpc Row spacing, cm
 #' @param closeComponent 'Y' or 'N' . Should the rotation component be closed? defaults to 'N'
 #' @keywords create xdb, planting managment
 #' @export
@@ -185,6 +185,9 @@ write_xdb_mFertilize <- function(outFile, Year, DOY, ANfer, closeComponent = 'N'
   }
 }
 
+
+
+
 #' Write SALUS xdb.xml Harvest Management for Rotation Component: At Maturity
 #'
 #' This function writes the harvest management arguments after write_xdb_rotation has been run. See http://salusmodel.glg.msu.edu/salus.ddb.xml for more
@@ -194,8 +197,8 @@ write_xdb_mFertilize <- function(outFile, Year, DOY, ANfer, closeComponent = 'N'
 #'
 #' All other SALUS fertilizer parameters are set currently as default.
 #' @param outFile Full file path for an existing .xdb.xml to appended to, created with write_xdb_topMatter
-#' @param HKnDnPc Harvest knock-down percent (%) between 0 and 100. Defaults to 100. Percent of stalk/leaves knocked down at harvest.
-#' @param HBPc Percent of byproduct harvested (%) between 0 and 100. Defaults to 0. basically how much of the leaves/stem to you want to remove from the field
+#' @param HKnDnPc Harvest knock-down percent between 0 and 100. Defaults to 100. Percent of stalk/leaves knocked down at harvest.
+#' @param HBPc Percent of byproduct harvested between 0 and 100. Defaults to 0. basically how much of the leaves/stem to you want to remove from the field
 #' @param HPc Harvest percentage between 0 and 100. Defaults to 100.
 #' @param closeComponent 'Y' or 'N' . Should the rotation component be closed? defaults to 'N'
 #' @keywords create xdb, fertilizer managment
@@ -210,7 +213,7 @@ write_xdb_mFertilize <- function(outFile, Year, DOY, ANfer, closeComponent = 'N'
 
 write_xdb_mHarvest_maturity <- function(outFile, HKnDnPc = 100, HBPc = 0, HPc = 100, closeComponent = 'N'){
   # write management details - appends to previous file
-  cat(paste0('        <Mgt_Harvest_App Year="" DOY="" DAP="" HStg="" HCom="H"',
+  cat(paste0('        <Mgt_Harvest_App Year="" DOY="" DAP="" HStg="" HCom="H" ',
              'HSiz="" HPc="',HPc, '" HBmin="0" HBPc="', HBPc, '" HKnDnPc="', HKnDnPc, '" />\n'),
       file=outFile, append=TRUE)
 

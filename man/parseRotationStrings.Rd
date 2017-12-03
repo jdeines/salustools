@@ -18,10 +18,6 @@ This function extracts rotation and management level parameters for
 one experiment. Outputs a data frame containing year, crop,
 and irrigation status, along with nldas and soil codes.
 }
-\details{
-For any grid cells that include 'grassland' in the middle of a crop sequence,
-this is assumed to be misclassified by the CDL and is changed to 'fallow'
-}
 \examples{
 # make inputs
 expCode <- '20266874911230010_20266874911230010_20266874911230010_20266874911231760_20266874911230010_20266874911230610_20266874911230010_20266874911230040_20266874911230240_20266874911230240_20266874911230611'

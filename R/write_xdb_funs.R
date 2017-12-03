@@ -120,6 +120,9 @@ write_xdb_rotation <- function(outFile, OrderNum, Title, IIrrI, IferI, ITilI,
 #' @param CultivarID cultivar ID, only needed for complex crop model
 #' @param Year Year of planting - if needed (planting on Reported date); XXXX
 #' @param DOY day of year of planting; only needed if planting management is 'R' or 'Y'. Valid range: 1-366
+#' @param Ppop Plant population at seeding (plants m^-2)
+#' @param RowSpc Row spacing (cm)
+#' @param closeComponent 'Y' or 'N' . Should the rotation component be closed? defaults to 'N'
 #' @keywords create xdb, planting managment
 #' @export
 #' @examples
@@ -128,14 +131,14 @@ write_xdb_rotation <- function(outFile, OrderNum, Title, IIrrI, IferI, ITilI,
 #'
 #' # append rotation component parameters to .xdb.xml; numeric parameters can be character or numeric
 #' write_xdb_mPlanting(outFile = fileOut, CropMod = 'C', SpeciesID = 'WH', CultivarID = 'P25R40',
-#'                    Year = 2006, DOY = 276)
+#'                    Year = 2006, DOY = 276, Ppop = 494.21, RowSpc = 19.05)
 
 write_xdb_mPlanting <- function(outFile, CropMod, SpeciesID, cultivar, Year,
-                                DOY, closeComponent = 'N'){
+                                DOY, Ppop, RowSpc, closeComponent = 'N'){
   # write management details - appends to previous file
   cat(paste0('        <Mgt_Planting CropMod="', CropMod, '" SpeciesID="', SpeciesID,
              '" CultivarID="', cultivar, '" Year="', Year, '" DOY="', DOY,
-             '" EYear="" EDOY="" Ppop="494.21" Ppoe="494.21" PlMe="S" PlDs="R" RowSpc="19.05"',
+             '" EYear="" EDOY="" Ppop="',Ppop, '" Ppoe="', Ppop, '" PlMe="S" PlDs="R" RowSpc="',RowSpc, '"',
              ' AziR="" SDepth="4" SdWtPl="" SdAge="" ATemp="" PlPH="" />\n'),
       file=outFile, append=TRUE)
 
@@ -158,6 +161,7 @@ write_xdb_mPlanting <- function(outFile, CropMod, SpeciesID, cultivar, Year,
 #' @param Year Year of fertilization event - if needed (fertilizing on Reported date); XXXX
 #' @param DOY day of year of fertilization event; only needed if fert management is 'R' or 'Y'. Valid range: 1-366
 #' @param ANfer amount of nitrogen in fertilizer <- 78.47 # kg / ha
+#' @param closeComponent 'Y' or 'N' . Should the rotation component be closed? defaults to 'N'
 #' @keywords create xdb, fertilizer managment
 #' @export
 #' @examples
@@ -181,8 +185,44 @@ write_xdb_mFertilize <- function(outFile, Year, DOY, ANfer, closeComponent = 'N'
   }
 }
 
+#' Write SALUS xdb.xml Harvest Management for Rotation Component: At Maturity
+#'
+#' This function writes the harvest management arguments after write_xdb_rotation has been run. See http://salusmodel.glg.msu.edu/salus.ddb.xml for more
+#' information about SALUS parameter options. This function should be followed with additional
+#' write_xdb_m* (rotation managements), and write_xdb_bottomMatter functions to complete the Experiment file.
+#' Includes an option to close the rotation compoment if this is the last management specified.
+#'
+#' All other SALUS fertilizer parameters are set currently as default.
+#' @param outFile Full file path for an existing .xdb.xml to appended to, created with write_xdb_topMatter
+#' @param HKnDnPc Harvest knock-down percent (%) between 0 and 100. Defaults to 100. Percent of stalk/leaves knocked down at harvest.
+#' @param HBPc Percent of byproduct harvested (%) between 0 and 100. Defaults to 0. basically how much of the leaves/stem to you want to remove from the field
+#' @param HPc Harvest percentage between 0 and 100. Defaults to 100.
+#' @param closeComponent 'Y' or 'N' . Should the rotation component be closed? defaults to 'N'
+#' @keywords create xdb, fertilizer managment
+#' @export
+#' @examples
+#' # file path to existing .xdb.xml file created by write_xdb_topMatter
+#' fileOut <- 'C:/Users/deinesji/1PhdJill/test.xdb.xml'
+#'
+#' # append rotation component parameters to .xdb.xml; numeric parameters can be character or numeric
+#' write_xdb_mHarvest(outFile = fileOut)
 
-#' Write SALUS xdb.xml Harvest Management for Rotation Component
+
+write_xdb_mHarvest_maturity <- function(outFile, HKnDnPc = 100, HBPc = 0, HPc = 100, closeComponent = 'N'){
+  # write management details - appends to previous file
+  cat(paste0('        <Mgt_Harvest_App Year="" DOY="" DAP="" HStg="" HCom="H"',
+             'HSiz="" HPc="',HPc, '" HBmin="0" HBPc="', HBPc, '" HKnDnPc="', HKnDnPc, '" />\n'),
+      file=outFile, append=TRUE)
+
+  # close component if specified
+  if(closeComponent == 'Y'){
+    cat('      </Component>\n', file=outFile, append=TRUE)
+  }
+}
+
+
+
+#' Write SALUS xdb.xml Harvest Management for Rotation Component: Reported Date
 #'
 #' This function writes the harvest management arguments after write_xdb_rotation has been run. See http://salusmodel.glg.msu.edu/salus.ddb.xml for more
 #' information about SALUS parameter options. This function should be followed with additional
@@ -193,6 +233,7 @@ write_xdb_mFertilize <- function(outFile, Year, DOY, ANfer, closeComponent = 'N'
 #' @param outFile Full file path for an existing .xdb.xml to appended to, created with write_xdb_topMatter
 #' @param Year Year of harvest event - if needed (harvesting on Reported date); XXXX
 #' @param DOY day of year of harvest event; only needed if harvest management is 'R' or 'Y'. Valid range: 1-366
+#' @param closeComponent 'Y' or 'N' . Should the rotation component be closed? defaults to 'N'
 #' @keywords create xdb, fertilizer managment
 #' @export
 #' @examples
@@ -202,7 +243,7 @@ write_xdb_mFertilize <- function(outFile, Year, DOY, ANfer, closeComponent = 'N'
 #' # append rotation component parameters to .xdb.xml; numeric parameters can be character or numeric
 #' write_xdb_mHarvest(outFile = fileOut, Year = 2007, DOY = 178)
 
-write_xdb_mHarvest <- function(outFile, Year, DOY, closeComponent = 'N'){
+write_xdb_mHarvest_reported <- function(outFile, Year, DOY, closeComponent = 'N'){
   # write management details - appends to previous file
   cat(paste0('        <Mgt_Harvest_App Year="', Year, '" DOY="', DOY,
              '" DAP="" HStg="" HCom="H" HSiz="" HPc="100" HBmin="0" HBPc="0" HKnDnPc="100" />\n'),

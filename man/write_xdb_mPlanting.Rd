@@ -4,8 +4,8 @@
 \alias{write_xdb_mPlanting}
 \title{Write SALUS xdb.xml Planting Management for Rotation Component}
 \usage{
-write_xdb_mPlanting(outFile, CropMod, SpeciesID, cultivar, Year, DOY,
-  closeComponent = "N")
+write_xdb_mPlanting(outFile, CropMod, SpeciesID, cultivar, Year, DOY, Ppop,
+  RowSpc, closeComponent = "N")
 }
 \arguments{
 \item{outFile}{Full file path for an existing .xdb.xml to appended to, created with write_xdb_topMatter}
@@ -17,6 +17,12 @@ write_xdb_mPlanting(outFile, CropMod, SpeciesID, cultivar, Year, DOY,
 \item{Year}{Year of planting - if needed (planting on Reported date); XXXX}
 
 \item{DOY}{day of year of planting; only needed if planting management is 'R' or 'Y'. Valid range: 1-366}
+
+\item{Ppop}{Plant population at seeding (plants m^-2)}
+
+\item{RowSpc}{Row spacing (cm)}
+
+\item{closeComponent}{'Y' or 'N' . Should the rotation component be closed? defaults to 'N'}
 
 \item{CultivarID}{cultivar ID, only needed for complex crop model}
 }
@@ -35,7 +41,7 @@ fileOut <- 'C:/Users/deinesji/1PhdJill/test.xdb.xml'
 
 # append rotation component parameters to .xdb.xml; numeric parameters can be character or numeric
 write_xdb_mPlanting(outFile = fileOut, CropMod = 'C', SpeciesID = 'WH', CultivarID = 'P25R40',
-                   Year = 2006, DOY = 276)
+                   Year = 2006, DOY = 276, Ppop = 494.21, RowSpc = 19.05)
 }
 \keyword{create}
 \keyword{managment}

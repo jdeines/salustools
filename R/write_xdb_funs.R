@@ -100,7 +100,7 @@ write_xdb_rotation <- function(outFile, OrderNum, Title, IIrrI, IferI, ITilI,
 
   # write rotation details - appends to previous file
   cat(paste0('      <Component OrderNum="', OrderNum, '" Title="', Title,
-             '" IPltI="R" IIrrI="', IIrrI, '" IferI="', IferI, '" IResI="R" ITilI="', ITilI,
+             '" IPltI="R" IIrrI="', IIrrI, '" IferI="', IferI, '" IResI="N" ITilI="', ITilI,
              '" IHarI="', IHarI, '" IEnvI="N">\n'),
       file=outFile, append=TRUE)
 }
@@ -177,6 +177,80 @@ write_xdb_mFertilize <- function(outFile, Year, DOY, ANfer, closeComponent = 'N'
              '" DAP="" IFType="FE010" FerCode="AP001" FInP="100" DFert="5" ACrbFer="0" ANFer="',
              ANfer, '" APFer="0" AKFer="0" ACFer="0" AOFer="0" FOCod="" FerDecRt="0"',
              ' VolN="0" VolNRate="0" />\n'),
+      file=outFile, append=TRUE)
+
+  # close component if specified
+  if(closeComponent == 'Y'){
+    cat('      </Component>\n', file=outFile, append=TRUE)
+  }
+}
+
+#' Write SALUS xdb.xml Tillage Management for Rotation Component
+#'
+#' This function writes the tillage management arguments after write_xdb_rotation has been run.
+#' See http://salusmodel.glg.msu.edu/salus.ddb.xml for more
+#' information about SALUS parameter options. This function should be followed with additional
+#' write_xdb_m* (rotation managements), and write_xdb_bottomMatter functions to complete the Experiment file.
+#' Includes an option to close the rotation compoment if this is the last management specified.
+#'
+#' All other SALUS tillage parameters are set currently as default.
+#' @param outFile Full file path for an existing .xdb.xml to appended to, created with write_xdb_topMatter
+#' @param Year Year of tillage event - if using fertilizing on Reported date; XXXX
+#' @param DOY day of year of tillage event; only needed if till management is 'R' or 'Y'. Valid range: 1-366
+#' @param TDep Tillage depth in cm. Defaults to 10.16
+#' @param closeComponent 'Y' or 'N' . Should the rotation component be closed? defaults to 'N'
+#' @keywords create xdb, tillage managment
+#' @export
+#' @examples
+#' # file path to existing .xdb.xml file created by write_xdb_topMatter
+#' fileOut <- 'C:/Users/deinesji/1PhdJill/test.xdb.xml'
+#'
+#' # append rotation component parameters to .xdb.xml; numeric parameters can be character or numeric
+#' write_xdb_mTillage(outFile = fileOut, Year = 2007, DOY = 75)
+
+write_xdb_mTillage <- function(outFile, Year, DOY, TDep = 10.16, closeComponent = 'N'){
+  # write management details - appends to previous file
+  cat(paste0('        <Mgt_Tillage_App Year="', Year, '" DOY="', DOY,
+             '" DAP="" TImpl="TI002" TDep="', TDep, '" />\n'),
+      file=outFile, append=TRUE)
+
+  # close component if specified
+  if(closeComponent == 'Y'){
+    cat('      </Component>\n', file=outFile, append=TRUE)
+  }
+}
+
+
+#' Write SALUS xdb.xml Irrigation Management for Rotation Component: Auto
+#'
+#' This function writes the irrigation management arguments after write_xdb_rotation has been run.
+#' See http://salusmodel.glg.msu.edu/salus.ddb.xml for more
+#' information about SALUS parameter options. This function should be followed with additional
+#' write_xdb_m* (rotation managements), and write_xdb_bottomMatter functions to complete the Experiment file.
+#' Includes an option to close the rotation compoment if this is the last management specified.
+#'
+#' All other SALUS tillage parameters are set currently as default.
+#' @param outFile Full file path for an existing .xdb.xml to appended to, created with write_xdb_topMatter
+#' @param AIrAm Amount per irrigation if fixed in mm; defaults to "" empty quotes
+#' @param DSoil Management depth for irrig. cm. Defaults to 20 cm
+#' @param ThetaC Threshold for automatic appl.- percent of max. available w. Defaults to 50
+#' @param IAMe Method for automatic appl. defaults to 'IR004' for sprinkler
+#' @param closeComponent 'Y' or 'N' . Should the rotation component be closed? defaults to 'N'
+#' @keywords create xdb, tillage managment
+#' @export
+#' @examples
+#' # file path to existing .xdb.xml file created by write_xdb_topMatter
+#' fileOut <- 'C:/Users/deinesji/1PhdJill/test.xdb.xml'
+#'
+#' # append rotation component parameters to .xdb.xml; numeric parameters can be character or numeric
+#' write_xdb_mTillage(outFile = fileOut)
+
+write_xdb_mIrrigate_Auto <- function(outFile, AIrAm = '', DSoil = 20, ThetaC = 50,
+                                     IAMe = 'IR004', closeComponent = 'N'){
+  # write management details - appends to previous file
+  cat(paste0('        <Mgt_Irrigation_Auto AIrAm="', AIrAm, '" DSoil="', DSoil,
+             '" EffIrr="" IAMe="', IAMe, '" IEPt="" IOff="" ThetaC="',
+              ThetaC, '" />\n'),
       file=outFile, append=TRUE)
 
   # close component if specified

@@ -16,8 +16,8 @@
 #' @param startyear year to start experiment
 #' @param Nyears Number of years in experiment
 #' @param startDOY Starting day of year, fills in SDOY parameter
+#' @param cropfp Filepath to crop .cdb.xml database file.
 #' @param state state, 2-letter abbreviation. defaults to 'KS'
-#' @param cropfp Filepath to crop .cdb.xml database file. Defaults to 'cropsn29Dec2016.cdb.xml'
 #' @keywords preparation to write experiment parameters
 #' @export
 #' @examples
@@ -31,12 +31,13 @@
 #'
 #' # translate mukey, expid, and nldas info into data.frame of Experiment parameters
 #' exp_master <- makeExperimentTable('run title', lemaExps$ExpID, lemaExps$mukey,
-#'                                   lemaExps$nldas, lemaExps$ExpCode, 2005, 11, 265)
+#'                                   lemaExps$nldas, lemaExps$ExpCode, 2005, 11, 265,
+#'                                   'cropsn29Dec2016_SGttMatrFixed.cdb.xml')
 
 
 makeExperimentTable <- function(runTitle, ExpID, mukey, wthID, ExpCode,
-                                startyear, Nyears, startDOY,
-                                state = 'KS', cropfp = 'cropsn29Dec2016.cdb.xml'){
+                                startyear, Nyears, startDOY, cropfp,
+                                state = 'KS'){
   exptab <- data.frame(ExpID = ExpID,
                        runTitle = runTitle,
                        soilId = paste0(state,mukey),

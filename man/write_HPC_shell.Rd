@@ -5,7 +5,7 @@
 \title{Make HPCC Shell Files}
 \usage{
 write_HPC_shell(shDir, hpcHomeDir, hpcOutDir, xdb, sdb, wdbZip, DayVars,
-  SeaVars, walltime, memory, cdb = "cropsn29Dec2016.cdb.xml")
+  SeaVars, walltime, memory, cdb)
 }
 \arguments{
 \item{shDir}{Directory in which to save the output shell sh file. the sh filename is pulled from xdb filename}
@@ -28,7 +28,7 @@ write_HPC_shell(shDir, hpcHomeDir, hpcOutDir, xdb, sdb, wdbZip, DayVars,
 
 \item{memory}{For HPCC - how much memory the job will need. ie, '2gb' or '2000mb'}
 
-\item{cdb}{Defaults to cropsn29Dec2016.cdb.xml}
+\item{cdb}{filename of the crop cdb.xml file, without the extension}
 }
 \description{
 This function makes a shell script to defining experiment runs for MSU's High

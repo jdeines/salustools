@@ -21,7 +21,7 @@
 #' @param SeaVars CSV string of SALUS seasonal variables to return
 #' @param walltime For HPCC - how long you expect the job to run. Format HH:MM:SS
 #' @param memory For HPCC - how much memory the job will need. ie, '2gb' or '2000mb'
-#' @param cdb Defaults to cropsn29Dec2016.cdb.xml
+#' @param cdb filename of the crop cdb.xml file, without the extension
 #' @keywords HPCC preparation shell sh
 #' @export
 #' @examples
@@ -41,7 +41,7 @@
 #'                 SeaVars, walltime, memory)
 
 write_HPC_shell <- function(shDir, hpcHomeDir, hpcOutDir, xdb,sdb,wdbZip,DayVars,SeaVars,
-                             walltime, memory, cdb = 'cropsn29Dec2016.cdb.xml'){
+                             walltime, memory, cdb){
   # set output file to binary encoding (no windows end of lines)
   outFile <- file(paste0(shDir,'/',xdb,'.sh'), 'wb')
 
@@ -61,7 +61,7 @@ write_HPC_shell <- function(shDir, hpcHomeDir, hpcOutDir, xdb,sdb,wdbZip,DayVars
              '# Copy the config files to the node\n',
              'cp -r -L ', hpcHomeDir, 'salus_gnu .\n',
              'cp -r -L ', hpcHomeDir, 'salus.gdb.xml .\n',
-             'cp -r -L ', hpcHomeDir, cdb, ' .\n',
+             'cp -r -L ', hpcHomeDir, cdb, '.cdb.xml .\n',
              'cp -r -L ', hpcHomeDir, sdb, '.sdb.xml .\n',
              'cp -r -L ', hpcHomeDir, wdbZip, ' .\n',
              'tar -xzf ', wdbZip,'\n',
@@ -74,7 +74,7 @@ write_HPC_shell <- function(shDir, hpcHomeDir, hpcOutDir, xdb,sdb,wdbZip,DayVars
              '# Remove the config files from the node (everything except the results). This may not be necessary since the TMPDIR is deleted after the job.\n',
              'rm salus_gnu\n',
              'rm salus.gdb.xml\n',
-             'rm cropsn29Dec2016.cdb.xml\n',
+             'rm ', cdb, '.cdb.xml\n',
              'rm ', sdb, '.sdb.xml\n',
              'rm *.wdb.xml\n',
              'rm ', wdbZip, '\n',

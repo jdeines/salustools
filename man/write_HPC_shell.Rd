@@ -4,8 +4,8 @@
 \alias{write_HPC_shell}
 \title{Make HPCC Shell Files}
 \usage{
-write_HPC_shell(shDir, hpcHomeDir, hpcOutDir, xdb, sdb, wdbZip, DayVars,
-  SeaVars, walltime, memory, cdb)
+write_HPC_shell(shDir, hpcHomeDir, hpcXdbDir, hpcOutDir, xdb, sdb, wdbZip,
+  DayVars, SeaVars, walltime, memory, cdb)
 }
 \arguments{
 \item{shDir}{Directory in which to save the output shell sh file. the sh filename is pulled from xdb filename}

@@ -40,7 +40,7 @@
 #' write_HPC_shell(shDir, hpcHomeDir, hpcOutDir, xdb, sdb, wdbZip, DayVars,
 #'                 SeaVars, walltime, memory)
 
-write_HPC_shell <- function(shDir, hpcHomeDir, hpcOutDir, xdb,sdb,wdbZip,DayVars,SeaVars,
+write_HPC_shell <- function(shDir, hpcHomeDir, hpcXdbDir, hpcOutDir, xdb,sdb,wdbZip,DayVars,SeaVars,
                              walltime, memory, cdb){
   # set output file to binary encoding (no windows end of lines)
   outFile <- file(paste0(shDir,'/',xdb,'.sh'), 'wb')
@@ -65,7 +65,7 @@ write_HPC_shell <- function(shDir, hpcHomeDir, hpcOutDir, xdb,sdb,wdbZip,DayVars
              'cp -r -L ', hpcHomeDir, sdb, '.sdb.xml .\n',
              'cp -r -L ', hpcHomeDir, wdbZip, ' .\n',
              'tar -xzf ', wdbZip,'\n',
-             'cp -r -L ', hpcHomeDir, xdb, '.xdb.xml .\n\n',
+             'cp -r -L ', hpcXdbDir, xdb, '.xdb.xml .\n\n',
              '# Run SALUS\n',
              './salus_gnu -wn xdb="', xdb, '.xdb.xml" file1="', xdb, '_daily.csv" ',
              'freq1="1" vars1="', DayVars, '" file2="', xdb, '_seasonal.csv" ',

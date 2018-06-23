@@ -5,7 +5,7 @@
 \title{Write SALUS xdb.xml Planting Management for Rotation Component}
 \usage{
 write_xdb_mPlanting(outFile, CropMod, SpeciesID, cultivar, Year, DOY, Ppop,
-  RowSpc, closeComponent = "N")
+  RowSpc, SDepth, closeComponent = "N")
 }
 \arguments{
 \item{outFile}{Full file path for an existing .xdb.xml to appended to, created with write_xdb_topMatter}
@@ -21,6 +21,8 @@ write_xdb_mPlanting(outFile, CropMod, SpeciesID, cultivar, Year, DOY, Ppop,
 \item{Ppop}{Plant population at seeding; plants m^-2}
 
 \item{RowSpc}{Row spacing, cm}
+
+\item{SDepth}{planting depth, cm}
 
 \item{closeComponent}{'Y' or 'N' . Should the rotation component be closed? defaults to 'N'}
 

@@ -42,7 +42,7 @@ makeExperimentTable <- function(runTitle, ExpID, mukey, wthID, ExpCode,
                        runTitle = runTitle,
                        soilId = paste0(state,mukey),
                        soilfp = paste0(state,'.sdb.xml'),
-                       nldas = wthID,
+                       weather = wthID,
                        weatherfp = paste0(wthID,'.wdb.xml'),
                        startYear = startyear,
                        Nyrs = Nyears,
@@ -82,7 +82,7 @@ parseRotationStrings <- function(ExpCode, startyear, cropkey){
 
   # extract vars
   soil <- substr(yearCode[[1]], start = 1, stop = 9)
-  nldas <- substr(yearCode[[1]], start = 10, stop = 13)
+  weather <- substr(yearCode[[1]], start = 10, stop = 13)
   crop <- substr(yearCode[[1]], start = 14, stop = 16)
   irr <- substr(yearCode[[1]], start = 17, stop = 17)
 
@@ -91,14 +91,14 @@ parseRotationStrings <- function(ExpCode, startyear, cropkey){
   outdf <- data.frame(year = startyear:endyear,
                       cropCode = crop,
                       irrStatus = irr,
-                      nldas = nldas,
+                      weather = weather,
                       soilkey = soil)
   # add crop name
   outdf2 <- merge(outdf, cropkey, by = 'cropCode')
   # format
   outdf3 <- outdf2[order(outdf2$year),]
   rownames(outdf3) <- 1:nrow(outdf3)
-  outdf4 <- outdf3[,c('year','crop','irrStatus','nldas','soilkey')]
+  outdf4 <- outdf3[,c('year','crop','irrStatus','weather','soilkey')]
 
   # # change grassland to fallow if it's embedded in a crop rotation sequence
   # if(sum(outdf4$crop == 'GRASS') < length(soil)/3){

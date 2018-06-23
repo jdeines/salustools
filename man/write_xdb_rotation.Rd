@@ -4,7 +4,7 @@
 \alias{write_xdb_rotation}
 \title{Write SALUS xdb.xml Rotation Component Level Parameters}
 \usage{
-write_xdb_rotation(outFile, OrderNum, Title, IIrrI, IferI, ITilI, IHarI)
+write_xdb_rotation(outFile, OrderNum, Title, IIrrI, IferI, ITilI, IHarI, IResI)
 }
 \arguments{
 \item{outFile}{Full file path for an existing .xdb.xml to appended to, created with write_xdb_topMatter}
@@ -20,6 +20,8 @@ write_xdb_rotation(outFile, OrderNum, Title, IIrrI, IferI, ITilI, IHarI)
 \item{ITilI}{Tillage management. 'N' - no tillage; 'A' - automatic; 'R' - reported; 'Y' - reported doy, 'D' - days after planting}
 
 \item{IHarI}{Harvest management. A: Automatic; D: Days after Planting; G: At Growth Stages; M: At Maturity R: Reported Date W: Harvest when crop reaches given weight Y: Reported Day of Year}
+
+\item{IResI}{Residue management}
 }
 \description{
 This function writes the rotation component arguments. Subsequent write_xdb_m* functions append information
@@ -36,7 +38,7 @@ fileOut <- 'C:/Users/deinesji/1PhdJill/test.xdb.xml'
 
 # append rotation component parameters to .xdb.xml; numeric parameters can be character or numeric
 write_xdb_rotation(outFile = fileOut, OrderNum = 1, Title = 'Wheat', IIrrI = 'N',
-                   IferI = 'R', ITilI = 'R', 'IHarI' = 'R')
+                   IferI = 'R', ITilI = 'R', 'IHarI' = 'R', IResI = 'A')
 }
 \keyword{create}
 \keyword{xdb}

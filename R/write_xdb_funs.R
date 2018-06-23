@@ -81,6 +81,7 @@ write_xdb_experiment <- function(outFile, ExpID, RunTitle, startYear, NYrs, star
 #' @param IferI Fertilizer management. 'N' - not irrigated; 'A' - automatic; 'F' - auto with fixed amount; 'R' - reported date, 'Y' - reported doy, 'D' - days after planting
 #' @param ITilI Tillage management. 'N' - no tillage; 'A' - automatic; 'R' - reported; 'Y' - reported doy, 'D' - days after planting
 #' @param IHarI Harvest management. A: Automatic; D: Days after Planting; G: At Growth Stages; M: At Maturity R: Reported Date W: Harvest when crop reaches given weight Y: Reported Day of Year
+#' @param IResI Residue management
 #' @keywords create xdb
 #' @export
 #' @examples
@@ -89,10 +90,10 @@ write_xdb_experiment <- function(outFile, ExpID, RunTitle, startYear, NYrs, star
 #'
 #' # append rotation component parameters to .xdb.xml; numeric parameters can be character or numeric
 #' write_xdb_rotation(outFile = fileOut, OrderNum = 1, Title = 'Wheat', IIrrI = 'N',
-#'                    IferI = 'R', ITilI = 'R', 'IHarI' = 'R')
+#'                    IferI = 'R', ITilI = 'R', 'IHarI' = 'R', IResI = 'A')
 
 write_xdb_rotation <- function(outFile, OrderNum, Title, IIrrI, IferI, ITilI,
-                               IHarI){
+                               IHarI, IResI){
   # open rotation components section if position == 'first'
   if(OrderNum == 1){
     cat('    <Rotation_Components>\n', file = outFile, append=TRUE)
@@ -100,8 +101,8 @@ write_xdb_rotation <- function(outFile, OrderNum, Title, IIrrI, IferI, ITilI,
 
   # write rotation details - appends to previous file
   cat(paste0('      <Component OrderNum="', OrderNum, '" Title="', Title,
-             '" IPltI="R" IIrrI="', IIrrI, '" IferI="', IferI, '" IResI="N" ITilI="', ITilI,
-             '" IHarI="', IHarI, '" IEnvI="N">\n'),
+             '" IPltI="R" IIrrI="', IIrrI, '" IferI="', IferI, '" IResI="', IResI,
+             '" ITilI="', ITilI, '" IHarI="', IHarI, '" IEnvI="N">\n'),
       file=outFile, append=TRUE)
 }
 
@@ -122,6 +123,7 @@ write_xdb_rotation <- function(outFile, OrderNum, Title, IIrrI, IferI, ITilI,
 #' @param DOY day of year of planting; only needed if planting management is 'R' or 'Y'. Valid range: 1-366
 #' @param Ppop Plant population at seeding; plants m^-2
 #' @param RowSpc Row spacing, cm
+#' @param SDepth planting depth, cm
 #' @param closeComponent 'Y' or 'N' . Should the rotation component be closed? defaults to 'N'
 #' @keywords create xdb, planting managment
 #' @export
@@ -134,12 +136,12 @@ write_xdb_rotation <- function(outFile, OrderNum, Title, IIrrI, IferI, ITilI,
 #'                    Year = 2006, DOY = 276, Ppop = 494.21, RowSpc = 19.05)
 
 write_xdb_mPlanting <- function(outFile, CropMod, SpeciesID, cultivar, Year,
-                                DOY, Ppop, RowSpc, closeComponent = 'N'){
+                                DOY, Ppop, RowSpc, SDepth, closeComponent = 'N'){
   # write management details - appends to previous file
   cat(paste0('        <Mgt_Planting CropMod="', CropMod, '" SpeciesID="', SpeciesID,
              '" CultivarID="', cultivar, '" Year="', Year, '" DOY="', DOY,
              '" EYear="" EDOY="" Ppop="',Ppop, '" Ppoe="', Ppop, '" PlMe="S" PlDs="R" RowSpc="',RowSpc, '"',
-             ' AziR="" SDepth="4" SdWtPl="" SdAge="" ATemp="" PlPH="" />\n'),
+             ' AziR="" SDepth="', SDepth, '" SdWtPl="" SdAge="" ATemp="" PlPH="" />\n'),
       file=outFile, append=TRUE)
 
   # close component if specified
@@ -177,6 +179,37 @@ write_xdb_mFertilize <- function(outFile, Year, DOY, ANfer, closeComponent = 'N'
              '" DAP="" IFType="FE010" FerCode="AP001" FInP="100" DFert="5" ACrbFer="0" ANFer="',
              ANfer, '" APFer="0" AKFer="0" ACFer="0" AOFer="0" FOCod="" FerDecRt="0"',
              ' VolN="0" VolNRate="0" />\n'),
+      file=outFile, append=TRUE)
+
+  # close component if specified
+  if(closeComponent == 'Y'){
+    cat('      </Component>\n', file=outFile, append=TRUE)
+  }
+}
+
+#' Write SALUS xdb.xml AUTO Fertlizer Management for Rotation Component
+#'
+#' This function writes the fertilizer management arguments after write_xdb_rotation has been run. See http://salusmodel.glg.msu.edu/salus.ddb.xml for more
+#' information about SALUS parameter options. This function should be followed with additional
+#' write_xdb_m* (rotation managements), and write_xdb_bottomMatter functions to complete the Experiment file.
+#' Includes an option to close the rotation compoment if this is the last management specified.
+#'
+#' All other SALUS fertilizer parameters are set currently as default.
+#' @param outFile Full file path for an existing .xdb.xml to appended to, created with write_xdb_topMatter
+#' @param DSoilN Application depth, cm, required
+#' @param NCode Materian code, required
+#' @param SoilNC Threshold, N stress factor, percent, required
+#' @param SoilNX Amount per application, kg N per ha, required
+#' @param closeComponent 'Y' or 'N' . Should the rotation component be closed? defaults to 'N'
+#' @keywords create xdb, fertilizer managment
+#' @export
+#' @examples
+
+write_xdb_mFertilize_Auto <- function(outFile, SoilNC, SoilNX, DSoilN = '5',
+                                      NCode = "FE010", closeComponent = 'N'){
+  # write management details - appends to previous file
+  cat(paste0('        <Mgt_Fertilizer_Auto DSoilN="', DSoilN, '" NCode="', NCode,
+             '" NEnd="" SoilNC="', SoilNC,  '" SoilNX="', SoilNX,'" />\n'),
       file=outFile, append=TRUE)
 
   # close component if specified

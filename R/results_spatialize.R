@@ -48,7 +48,9 @@ spatialize <- function(expt_df, variable, year, gridkey, template, aoi){
 
   # add grid cell ids to results
   gridkey$ExpID <- as.character(gridkey$ExpID)
-  var.annual2 <- var.annual %>% left_join(gridkey, by = 'ExpID')
+  var.annual2 <- var.annual %>%
+    left_join(gridkey, by = 'ExpID')  %>%
+    mutate(gridcell = as.integer(gridcell))
 
   # template to vector
   templateVector <- getValues(template)
@@ -68,9 +70,123 @@ spatialize <- function(expt_df, variable, year, gridkey, template, aoi){
   return(outRasClip)
 }
 
+#' Spatialize wrapper: apply to multiple years
+#'
+#' Function to apply the spatialize function to all years, and export rasters, optionally
+#' @param expt_df Data.frame containing SALUS annual results in long format, loaded with readr::read_csv
+#' @param variable Variable to process
+#' @param yearsWanted vector of years to process
+#' @param gridkey data.frame key linking ExpID and template gridcell
+#' @param template raster template
+#' @param aoi Area of interest to clip to defined by a spdf
+#' @param writeOut Y or N
+#' @param outFolder Needed if writeOut = 'Y'
+#' @keywords spatialize results all years
+#' @export
+#' @examples
+#' #' # example forthcoming
+
+# returns a raster stack for value
+spatializeAll <- function(expt.df, variable, yearsWanted, gridkey, template, aoi,
+                          writeOut = 'N', outFolder = ''){
+  rasList <- list()
+  for(year in yearsWanted){
+    rasName <- as.character(year)
+    ras <- salustools::spatialize(expt.df, variable, year,
+                                  gridkey, template,aoi)
+    if(writeOut == 'Y'){
+      fname <- paste0(outFolder, '/',variable, '_',year, '.tif')
+      writeRaster(ras, file = fname)
+    }
+    rasList[[rasName]] <- ras
+  }
+  rasStack <- stack(rasList, quick = TRUE)
+}
 
 
+#' Annual Yield Stats from Spatialized Results
+#'
+#' Function to extract annual total and summary stats from stacks of annual
+#' maps for the specified variable. Returns a data frame with annual totals and
+#' per area stats for all years for the specified variable and irrigation status
+#' @param cropCode code for crop desired: MZ, WH, SG, SB, AL
+#' @param yieldList List of stacks - 1 stack for each crop which includes all years
+#' @param irrigationStatus Y or N - needs to be manually matched in input yield list
+#' @keywords summarize results yields
+#' @export
+#' @examples
+#' # example forthcoming
 
+# returns data frame
+summarizeYieldStacks <- function(cropCode, yieldList, irrigationStatus){
+  # extract crop
+  yieldStack <- yieldList[[cropCode]]
+  # convert to kg per pixel (900m2) to be able to sum total
+  yield30 <- yieldStack / 10000 * 900
+  totals <- cellStats(yield30, stat = 'sum',na.rm=TRUE)
+
+  # get summary stats kg.ha
+  summaryStats <- t(cellStats(yieldStack, stat = 'summary',  na.rm=TRUE))
+
+  # format
+  outdf <- data.frame(year = yearsWanted,
+                      irrigated = irrigationStatus,
+                      crop = cropCode,
+                      yield_total_kg = totals,
+                      yield_min_kgha = summaryStats[,'Min.'],
+                      yield_Q1_kgha = summaryStats[,'1st Qu.'],
+                      yield_median_kgha = summaryStats[,'Median'],
+                      yield_mean_kgha = summaryStats[,'Mean'],
+                      yield_Q3_kgha = summaryStats[,'3rd Qu.'],
+                      yield_max_kgha = summaryStats[,'Max.'],
+                      stringsAsFactors = FALSE)
+  row.names(outdf) <- 1:nrow(outdf)
+  return(outdf)
+}
+
+#' Annual Water Stats from Spatialized Results
+#'
+#' Function to extract annual total and summary stats from stacks of annual
+#' maps for the specified variable. Returns a data frame with annual totals and
+#' per area stats for all years for the specified variable and irrigation status
+#' @param varStack stack of annual rasters for variable of interest
+#' @param varName name of variable
+#' @keywords summarize results water
+#' @export
+#' @examples
+#' # example forthcoming
+
+# returns data frame
+summarizeWaterStacks <- function(varStack, varName){
+
+  # convert volumetric raster in cubic meters
+  volStack <- varStack / 1000 * 900
+  totals <- cellStats(volStack, stat = 'sum',na.rm=TRUE)
+
+  # get summary stats (in orignal mm)
+
+  # if irrigation, don't count 0's
+  if(varName == 'irrigation'){
+    varStack[varStack == 0] <- NA
+  }
+
+  summaryStats <- t(cellStats(varStack, stat = 'summary',  na.rm=TRUE))
+
+  # format
+  outdf <- data.frame(year = yearsWanted,
+                      variable = varName,
+                      totalVolume_m3 = totals,
+                      totalVolume_km3 = totals * 1e-6,
+                      depth_min_mm = summaryStats[,'Min.'],
+                      depth_Q1_mm = summaryStats[,'1st Qu.'],
+                      depth_median_mm = summaryStats[,'Median'],
+                      depth_mean_mm = summaryStats[,'Mean'],
+                      depth_Q3_mm = summaryStats[,'3rd Qu.'],
+                      depth_max_mm = summaryStats[,'Max.'],
+                      stringsAsFactors = FALSE)
+  row.names(outdf) <- 1:nrow(outdf)
+  return(outdf)
+}
 
 
 

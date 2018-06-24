@@ -204,6 +204,7 @@ write_xdb_mFertilize <- function(outFile, Year, DOY, ANfer, closeComponent = 'N'
 #' @keywords create xdb, fertilizer managment
 #' @export
 #' @examples
+#' #' # example forthcoming
 
 write_xdb_mFertilize_Auto <- function(outFile, SoilNC, SoilNX, DSoilN = '5',
                                       NCode = "FE010", closeComponent = 'N'){

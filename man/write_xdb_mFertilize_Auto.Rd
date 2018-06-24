@@ -29,6 +29,9 @@ Includes an option to close the rotation compoment if this is the last managemen
 \details{
 All other SALUS fertilizer parameters are set currently as default.
 }
+\examples{
+#' # example forthcoming
+}
 \keyword{create}
 \keyword{fertilizer}
 \keyword{managment}

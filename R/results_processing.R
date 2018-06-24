@@ -18,6 +18,7 @@
 # define function
 salusRawToAnnual <- function(scratchDir, outDir, runname, startYear){
   library(dplyr)
+  library(readr)
 
   # load daily results within scratchDir
   dailyFiles <- list.files(scratchDir, pattern = '*daily.csv')
@@ -39,15 +40,14 @@ salusRawToAnnual <- function(scratchDir, outDir, runname, startYear){
       summarize(GWAD = max(GWAD, na.rm=TRUE),
                 IRRC_cum = max(IRRC, na.rm=TRUE),
                 DRNC_cum = max(DRNC, na.rm=TRUE),
-                PREC_cum = max(PREC, na.rm = TRUE),
-                LAI = max(LAI, na.rm = TRUE)) %>%
+                PREC_cum = max(PREC, na.rm = TRUE)) %>%
       # add species name back in
       left_join(cropByYear, by = c('ExpID','Year')) %>%
       # de-cumulate irrc, drnc, prec (turn to annual values)
       mutate(IRRC_mm = IRRC_cum - lag(IRRC_cum, default=0),
              DRNC_mm = DRNC_cum - lag(DRNC_cum, default=0),
              PREC_mm = PREC_cum - lag(PREC_cum, default=0)) %>%
-      select(c(ExpID, Year, SpeciesID, GWAD, IRRC_mm, DRNC_mm, PREC_mm, LAI)) %>%
+      select(c(ExpID, Year, SpeciesID, GWAD, IRRC_mm, DRNC_mm, PREC_mm)) %>%
       filter(Year >= startYear)
 
     # add an irrigation flag

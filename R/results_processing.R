@@ -32,7 +32,7 @@ salusRawToAnnual <- function(scratchDir, outDir, runname, startYear){
     cropByYear <- ddf %>%
       group_by(ExpID,Year) %>%
       slice(which.max(GWAD)) %>%
-      select(c(ExpID,Year, SpeciesID))
+      dplyr::select(c(ExpID,Year, SpeciesID))
 
     # get maximum values per year
     adf <- ddf %>%
@@ -47,7 +47,7 @@ salusRawToAnnual <- function(scratchDir, outDir, runname, startYear){
       mutate(IRRC_mm = IRRC_cum - lag(IRRC_cum, default=0),
              DRNC_mm = DRNC_cum - lag(DRNC_cum, default=0),
              PREC_mm = PREC_cum - lag(PREC_cum, default=0)) %>%
-      select(c(ExpID, Year, SpeciesID, GWAD, IRRC_mm, DRNC_mm, PREC_mm)) %>%
+      dplyr::select(c(ExpID, Year, SpeciesID, GWAD, IRRC_mm, DRNC_mm, PREC_mm)) %>%
       filter(Year >= startYear)
 
     # add an irrigation flag

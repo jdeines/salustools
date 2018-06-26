@@ -2,7 +2,7 @@
 % Please edit documentation in R/write_batch_funs.R
 \name{write_HPC_bat}
 \alias{write_HPC_bat}
-\title{Make HPCC Batch Files}
+\title{Make HPCC Batch Files to run all experiments in run}
 \usage{
 write_HPC_bat(sh_vector, outFile)
 }

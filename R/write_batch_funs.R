@@ -1,4 +1,4 @@
-#' Make HPCC Shell Files
+#' Make HPCC Shell Files to Run Xdbs
 #'
 #' This function makes a shell script to defining experiment runs for MSU's High
 #' Performance Computing Cluster (HPCC). This bash script copies the files needed
@@ -91,7 +91,7 @@ write_HPC_shell <- function(shDir, hpcHomeDir, hpcXdbDir, hpcOutDir, xdb,sdb,wdb
 
 
 
-#' Make HPCC Batch Files
+#' Make HPCC Batch Files to run all experiments in run
 #'
 #' This function makes a bash script to execute queue submissions to MSU's High
 #' Performance Computing Cluster (HPCC).

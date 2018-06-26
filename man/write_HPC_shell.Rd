@@ -2,7 +2,7 @@
 % Please edit documentation in R/write_batch_funs.R
 \name{write_HPC_shell}
 \alias{write_HPC_shell}
-\title{Make HPCC Shell Files}
+\title{Make HPCC Shell Files to Run Xdbs}
 \usage{
 write_HPC_shell(shDir, hpcHomeDir, hpcXdbDir, hpcOutDir, xdb, sdb, wdbZip,
   DayVars, SeaVars, walltime, memory, cdb)

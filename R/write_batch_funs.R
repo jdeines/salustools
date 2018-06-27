@@ -14,6 +14,7 @@
 #' @param shDir Directory in which to save the output shell sh file. the sh filename is pulled from xdb filename
 #' @param hpcHomeDir Directory on HPCC in which source files reside for this run (sdb, xdb, zipped weather, etc). Should end in a forward slash
 #' @param hpcOutDir Directory on HPCC to write results to, Should end in a forward slash
+#' @param Nflag '-w' or '-wn'.  -w runs SALUS without considerations of N stress
 #' @param xdb filename of the experiment file, without extension. sh name will be pulled from this.
 #' @param sdb filename of the soil file (no path, no .sdb.xml extension)
 #' @param wdbZip filename of the zipped weather file. Script will unzip on the node
@@ -40,8 +41,8 @@
 #' write_HPC_shell(shDir, hpcHomeDir, hpcOutDir, xdb, sdb, wdbZip, DayVars,
 #'                 SeaVars, walltime, memory)
 
-write_HPC_shell <- function(shDir, hpcHomeDir, hpcXdbDir, hpcOutDir, xdb,sdb,wdbZip,DayVars,SeaVars,
-                             walltime, memory, cdb){
+write_HPC_shell <- function(shDir, hpcHomeDir, hpcXdbDir, hpcOutDir, Nflag, xdb,
+                            sdb,wdbZip,DayVars,SeaVars, walltime, memory, cdb){
   # set output file to binary encoding (no windows end of lines)
   outFile <- file(paste0(shDir,'/',xdb,'.sh'), 'wb')
 
@@ -67,7 +68,7 @@ write_HPC_shell <- function(shDir, hpcHomeDir, hpcXdbDir, hpcOutDir, xdb,sdb,wdb
              'tar -xzf ', wdbZip,'\n',
              'cp -r -L ', hpcXdbDir, xdb, '.xdb.xml .\n\n',
              '# Run SALUS\n',
-             './salus_gnu -wn xdb="', xdb, '.xdb.xml" file1="', xdb, '_daily.csv" ',
+             './salus_gnu ', Nflag, ' xdb="', xdb, '.xdb.xml" file1="', xdb, '_daily.csv" ',
              'freq1="1" vars1="', DayVars, '" file2="', xdb, '_seasonal.csv" ',
              'freq2="season" vars2="', SeaVars, '" msglevel="status" > "',
              xdb, '_salus.log"\n\n',

@@ -4,8 +4,8 @@
 \alias{write_HPC_shell}
 \title{Make HPCC Shell Files to Run Xdbs}
 \usage{
-write_HPC_shell(shDir, hpcHomeDir, hpcXdbDir, hpcOutDir, xdb, sdb, wdbZip,
-  DayVars, SeaVars, walltime, memory, cdb)
+write_HPC_shell(shDir, hpcHomeDir, hpcXdbDir, hpcOutDir, Nflag, xdb, sdb,
+  wdbZip, DayVars, SeaVars, walltime, memory, cdb)
 }
 \arguments{
 \item{shDir}{Directory in which to save the output shell sh file. the sh filename is pulled from xdb filename}
@@ -13,6 +13,8 @@ write_HPC_shell(shDir, hpcHomeDir, hpcXdbDir, hpcOutDir, xdb, sdb, wdbZip,
 \item{hpcHomeDir}{Directory on HPCC in which source files reside for this run (sdb, xdb, zipped weather, etc). Should end in a forward slash}
 
 \item{hpcOutDir}{Directory on HPCC to write results to, Should end in a forward slash}
+
+\item{Nflag}{'-w' or '-wn'.  -w runs SALUS without considerations of N stress}
 
 \item{xdb}{filename of the experiment file, without extension. sh name will be pulled from this.}
 

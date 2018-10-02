@@ -4,8 +4,8 @@
 \alias{write_xdb_mHarvest_maturity}
 \title{Write SALUS xdb.xml Harvest Management for Rotation Component: At Maturity}
 \usage{
-write_xdb_mHarvest_maturity(outFile, HKnDnPc = 100, HBPc = 0, HPc = 100,
-  closeComponent = "N")
+write_xdb_mHarvest_maturity(outFile, HKnDnPc = 100, HBPc = 0,
+  HPc = 100, closeComponent = "N")
 }
 \arguments{
 \item{outFile}{Full file path for an existing .xdb.xml to appended to, created with write_xdb_topMatter}

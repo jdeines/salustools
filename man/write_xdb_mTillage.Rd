@@ -4,7 +4,8 @@
 \alias{write_xdb_mTillage}
 \title{Write SALUS xdb.xml Tillage Management for Rotation Component}
 \usage{
-write_xdb_mTillage(outFile, Year, DOY, TDep = 10.16, closeComponent = "N")
+write_xdb_mTillage(outFile, Year, DOY, TDep = 10.16,
+  closeComponent = "N")
 }
 \arguments{
 \item{outFile}{Full file path for an existing .xdb.xml to appended to, created with write_xdb_topMatter}

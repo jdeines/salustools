@@ -4,8 +4,8 @@
 \alias{write_xdb_mIrrigate_Auto}
 \title{Write SALUS xdb.xml Irrigation Management for Rotation Component: Auto}
 \usage{
-write_xdb_mIrrigate_Auto(outFile, AIrAm = "", DSoil = 20, ThetaC = 50,
-  IAMe = "IR004", closeComponent = "N")
+write_xdb_mIrrigate_Auto(outFile, AIrAm = "", DSoil = 20,
+  ThetaC = 50, IAMe = "IR004", closeComponent = "N")
 }
 \arguments{
 \item{outFile}{Full file path for an existing .xdb.xml to appended to, created with write_xdb_topMatter}

@@ -4,8 +4,9 @@
 \alias{write_xdb_bottomMatter}
 \title{Close SALUS xdb.xml by writing end elements}
 \usage{
-write_xdb_bottomMatter(outFile, closeComponent = "N", closeRotation = "N",
-  closeExperiment = "N", writeVersion = "N", closeXDB = "N")
+write_xdb_bottomMatter(outFile, closeComponent = "N",
+  closeRotation = "N", closeExperiment = "N", writeVersion = "N",
+  closeXDB = "N")
 }
 \arguments{
 \item{outFile}{Full file path for an existing .xdb.xml to appended to, created with write_xdb_topMatter}

@@ -4,8 +4,8 @@
 \alias{makeExperimentTable}
 \title{Make Experiment Master Table}
 \usage{
-makeExperimentTable(runTitle, ExpID, mukey, wthID, ExpCode, startyear, Nyears,
-  startDOY, cropfp, state = "KS")
+makeExperimentTable(runTitle, ExpID, mukey, wthID, ExpCode, startyear,
+  Nyears, startDOY, cropfp, state = "KS")
 }
 \arguments{
 \item{runTitle}{Name of overall run scenario}

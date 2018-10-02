@@ -4,7 +4,8 @@
 \alias{write_xdb_rotation}
 \title{Write SALUS xdb.xml Rotation Component Level Parameters}
 \usage{
-write_xdb_rotation(outFile, OrderNum, Title, IIrrI, IferI, ITilI, IHarI, IResI)
+write_xdb_rotation(outFile, OrderNum, Title, IIrrI, IferI, ITilI, IHarI,
+  IResI)
 }
 \arguments{
 \item{outFile}{Full file path for an existing .xdb.xml to appended to, created with write_xdb_topMatter}

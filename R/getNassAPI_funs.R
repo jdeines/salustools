@@ -34,7 +34,7 @@
 #' nass.df <- do.call("rbind",nass.list) 
 #' 
 
-getNassCounty <- function(apiKey, program, shortDesc, state, county){
+getNassCounty_short <- function(apiKey, program, shortDesc, state, county){
   library(httr)
   library(jsonlite)
   # build URL query
@@ -44,6 +44,53 @@ getNassCounty <- function(apiKey, program, shortDesc, state, county){
                        '/?key=',apiKey,
                        '&source_desc=',program,
                        '&short_desc=', shortDesc,
+                       '&agg_level_desc=','COUNTY',
+                       '&state_fips_code=', state,
+                       '&county_ansi=', county,
+                       '&format=',format)
+  
+  # if present, replace commas and spaces in url with encodings
+  if(grepl(" ", GETrequest))  GETrequest <- gsub(" ", "%20", GETrequest)
+  if(grepl(",", GETrequest))  GETrequest <- gsub(",", "%2C", GETrequest)
+  
+  # retrive data
+  req <- GET(GETrequest)
+  # check status and throw stop/error: 200 means successful
+  stop_for_status(req)
+  # extract content
+  json <- content(req, as = 'text', encoding = 'UTF-8')
+  # convert from JSON and extract df from list object
+  outputdf <- fromJSON(json)[[1]]
+}
+
+
+#' Extract NASS data by county from API - the whole shebang
+#'
+#' Downloads NASS crop data by requested county, program source. Intended to retrieve 
+#' all of the field crop data for a county, to be parsed by user.
+#' 
+#' @param apiKey Personal key; Obtained from http://quickstats.nass.usda.gov/api
+#' @param program 'CENSUS' or 'SURVEY'
+#' @param sector ie 'CROPS'
+#' @param group ie 'FIELD CROPS'
+#' @param state state 2 digit fips
+#' @param county county 3-digit ANSI code
+#' @keywords NASS county
+#' @export
+#' @examples
+
+getNassCounty_fc <- function(apiKey, program = 'CENSUS', sector = 'CROPS', group = 'FIELD CROPS', state, county){
+  library(httr)
+  library(jsonlite)
+  
+  # build URL query
+  baseurl <- 'http://quickstats.nass.usda.gov/api/api_GET'
+  format = 'JSON'
+  GETrequest <- paste0(baseurl,
+                       '/?key=',apiKey,
+                       '&source_desc=',program,
+                       '&sector_desc=',sector,
+                       '&group_desc=',group,
                        '&agg_level_desc=','COUNTY',
                        '&state_fips_code=', state,
                        '&county_ansi=', county,

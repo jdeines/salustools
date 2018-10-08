@@ -4,7 +4,8 @@
 \alias{getNassCounty_short}
 \title{Extract NASS data by county from API}
 \usage{
-getNassCounty_short(apiKey, program, shortDesc, state, county)
+getNassCounty_short(apiKey, program, shortDesc, state, county,
+  year = 1996)
 }
 \arguments{
 \item{apiKey}{Personal key; Obtained from http://quickstats.nass.usda.gov/api}
@@ -16,6 +17,8 @@ getNassCounty_short(apiKey, program, shortDesc, state, county)
 \item{state}{state 2 digit fips}
 
 \item{county}{county 3-digit ANSI code}
+
+\item{year}{year to start getting data - gets all subsequent years. default is 1996 to get all Census}
 }
 \description{
 Downloads NASS crop data by requested county, program source, and short desc

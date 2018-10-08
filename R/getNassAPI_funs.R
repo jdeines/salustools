@@ -7,6 +7,7 @@
 #' @param shortDesc short description of desired data field; aka 'Data Item'
 #' @param state state 2 digit fips
 #' @param county county 3-digit ANSI code
+#' @param year year to start getting data - gets all subsequent years. default is 1996 to get all Census
 #' @keywords NASS county
 #' @export
 #' @examples
@@ -34,7 +35,7 @@
 #' nass.df <- do.call("rbind",nass.list) 
 #' 
 
-getNassCounty_short <- function(apiKey, program, shortDesc, state, county){
+getNassCounty_short <- function(apiKey, program, shortDesc, state, county, year = 1996){
   library(httr)
   library(jsonlite)
   # build URL query
@@ -47,6 +48,7 @@ getNassCounty_short <- function(apiKey, program, shortDesc, state, county){
                        '&agg_level_desc=','COUNTY',
                        '&state_fips_code=', state,
                        '&county_ansi=', county,
+                       '&year__GE=',year,
                        '&format=',format)
   
   # if present, replace commas and spaces in url with encodings

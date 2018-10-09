@@ -1,40 +1,16 @@
-#' Extract NASS data from API by custom query components
+#' State Fips Lookup
 #'
-#' Maximum flexibility function to download specified NASS data based on a user supplied
-#' list of parameters. Requires knowledge of Quickstats API parameter codes 
+#' joins table of Fips by either stateName or stateAbbrev. requires dplyr. 
 #' 
-#' @param apiKey Personal key; Obtained from http://quickstats.nass.usda.gov/api
-#' @param params query string and values
+#' @param statesWanted data frame with a column either 'StateName' or 'StateAbbrev' for states of interest
 #' @export
 #' @examples
 #' 
-#'  # not yet tested!
-#' apiKey <- '28EAA9E6-8062-34A4-981A-B2ED4692228A' # my code, modified
-#' params = 'source_desc=CENSUS&
 
-getNass <- function(apiKey, params){
-  library(httr)
-  library(jsonlite)
-  # build URL query
-  baseurl <- 'http://quickstats.nass.usda.gov/api/api_GET'
-  format = 'JSON'
-  GETrequest <- paste0(baseurl,
-                       '/?key=',apiKey,
-                        params,
-                       '&format=',format)
-  
-  # if present, replace commas and spaces in url with encodings
-  if(grepl(" ", GETrequest))  GETrequest <- gsub(" ", "%20", GETrequest)
-  if(grepl(",", GETrequest))  GETrequest <- gsub(",", "%2C", GETrequest)
-  
-  # retrive data
-  req <- GET(GETrequest)
-  # check status and throw stop/error: 200 means successful
-  stop_for_status(req)
-  # extract content
-  json <- content(req, as = 'text', encoding = 'UTF-8')
-  # convert from JSON and extract df from list object
-  outputdf <- fromJSON(json)[[1]]
+getStateFips <- function(statesWanted){
+  library(dplyr)
+  output <- statesWanted %>% left_join(stateFipsLookup)
+  return(output)
 }
 
 

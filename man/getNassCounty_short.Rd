@@ -16,7 +16,7 @@ getNassCounty_short(apiKey, program, shortDesc, state, county,
 
 \item{state}{state 2 digit fips}
 
-\item{county}{county 3-digit ANSI code}
+\item{county}{county 3-digit ANSI code. To get all counties in state, set to NA.}
 
 \item{year}{year to start getting data - gets all subsequent years. default is 1996 to get all Census}
 }
